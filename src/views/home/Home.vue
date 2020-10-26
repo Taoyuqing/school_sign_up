@@ -8,15 +8,15 @@
       <van-form @submit="onSubmit">
         <van-field
           v-model="username"
-          name="用户名"
+          name="请输入姓名"
           left-icon="user-o"
-          placeholder="用户名"
+          placeholder="请输入姓名"
           label-align="right"
-          :rules="[{ required: true, message: '请输入用户名' }]"
+          :rules="[{ required: true, message: '请输入姓名' }]"
         />
         <van-field
           v-model="username"
-          name="用户名"
+          name="请输入身份证号"
           left-icon="idcard"
           label-align="right"
           placeholder="请输入身份证号"
@@ -24,46 +24,54 @@
         />
         <van-field
           v-model="username"
-          name="用户名"
+          name="请输入手机号"
           left-icon="phone-o"
           label-align="right"
-          placeholder="请输入身份证号"
+          placeholder="请输入手机号"
           :rules="[{ required: true, message: '请输入用户名' }]"
         />
         <van-field
           v-model="username"
-          name="用户名"
+          name="报考专业"
           left-icon="apps-o"
           label-align="right"
-          placeholder="请输入身份证号"
+          placeholder="报考专业"
           :rules="[{ required: true, message: '请输入用户名' }]"
         />
-        
+
         <van-field
           v-model="username"
-          name="用户名"
+          name="考试时间"
           left-icon="calendar-o"
           label-align="right"
-          placeholder="请输入身份证号"
-          :rules="[{ required: true, message: '请输入用户名' }]"
+          placeholder="考试时间"
+          :rules="[{ required: true, message: '请选择考试时间' }]"
         />
         <van-field
           v-model="username"
-          name="用户名"
+          name="报名费用"
           left-icon="balance-o"
           label-align="right"
-          placeholder="请输入身份证号"
-          :rules="[{ required: true, message: '请输入用户名' }]"
+          placeholder="报名费用"
+          :rules="[{ required: true, message: '报名费用' }]"
         />
       </van-form>
       <div style="padding:0px 20px">
-        <van-button type="primary" round size="large">大号按钮</van-button>
+        <van-button
+          type="primary"
+          native-type="submit"
+          round
+          size="large"
+          @click="payClick"
+          >提交并缴费</van-button
+        >
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { getauthorize, createOrder } from '../../utils/wxUtils'
 export default {
   name: 'Home',
   components: {},
@@ -72,8 +80,15 @@ export default {
       username: ''
     }
   },
+  mounted() {
+    getauthorize()
+  },
   methods: {
-    onSubmit() {}
+    onSubmit() {},
+    async payClick() {
+      let data = await this.$http.get('/jbjg/pay/getOpenId')
+      createOrder(data)
+    }
   }
 }
 </script>
