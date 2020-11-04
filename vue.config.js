@@ -13,4 +13,8 @@ module.exports = {
       },
     },
   },
+  // publicPath: '../wx-web', //这里解决静态资源引用路径问题
+  // outputDir: 'wx-web',
+  // // 放置静态资源的地方 (js/css/img/font/...)
+  // assetsDir: 'static',
 }

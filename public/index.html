@@ -5,10 +5,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
-    <script src="./jweixin-1.6.0.js"></script>
+    <script src="./wx/jweixin-1.6.0.js"></script>
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
   <body>
+    <script>
+      let screenWidth = document.body.clientWidth || document.body.clientWidth
+      let htmlDom = document.getElementsByTagName('html')[0]
+      htmlDom.style.fontSize = screenWidth / 10 + 'px'
+      window.wx = wx
+    </script>
     <noscript>
       <strong
         >We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work
@@ -20,10 +26,5 @@
     <!-- built files will be auto injected -->
   </body>
 
-  <script>
-    let screenWidth = document.body.clientWidth || document.body.clientWidth
-    let htmlDom = document.getElementsByTagName('html')[0]
-    htmlDom.style.fontSize = screenWidth / 10 + 'px'
-    window.wx = wx
-  </script>
+ 
 </html>

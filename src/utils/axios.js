@@ -19,9 +19,9 @@ http.interceptors.request.use(
   }
 )
 http.interceptors.response.use(
-  (config) => {
-    let newConfig = config
-    return newConfig
+  (response) => {
+    let res = response
+    return res
   },
   (error) => {
     Toast.fail('操作失败')

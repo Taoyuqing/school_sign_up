@@ -63,7 +63,17 @@
           round
           size="large"
           @click="payClick"
-          >提交并缴费</van-button
+          >{{msg}}</van-button
+        >
+      </div>
+      <div style="padding:0px 20px">
+        <van-button
+          type="primary"
+          native-type="submit"
+          round
+          size="large"
+          @click="authorizeClick"
+          >点击授权（按钮临时存在的 到时候不会这么做）</van-button
         >
       </div>
     </div>
@@ -71,23 +81,37 @@
 </template>
 
 <script>
-import { getauthorize, createOrder } from '../../utils/wxUtils'
+import { getauthorize, createOrder, getUrlParam } from '../../utils/wxUtils'
 export default {
   name: 'Home',
   components: {},
   data() {
     return {
-      username: ''
+      username: '',
+      msg:'提交并缴费'
     }
   },
-  mounted() {
-    getauthorize()
-  },
+  mounted() {},
   methods: {
     onSubmit() {},
     async payClick() {
-      let data = await this.$http.get('/jbjg/pay/getOpenId')
-      createOrder(data)
+      let code = getUrlParam('code')
+      let openid = localStorage.getItem('openid')
+      if (!openid) {
+        let data = await this.$http.get('/jbjg/pay/getOpenId', {
+          params: {
+            code
+          }
+        })
+        openid = data.data
+        localStorage.setItem('openid', openid)
+      }
+      createOrder(openid, () => {
+        this.msg = '已支付'
+      })
+    },
+    authorizeClick() {
+      getauthorize()
     }
   }
 }

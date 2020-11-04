@@ -14,8 +14,8 @@ let getToken = () => {
 }
 let getWXConfig = async (toekn) => {
   let config = await getToken()
-  wx.ready(() => {
-    wx.config({
+  window.wx.ready(() => {
+    window.wx.config({
       debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
       appId: config.appId, // 必填，公众号的唯一标识
       timestamp: config.timestamp, // 必填，生成签名的时间戳
@@ -28,45 +28,43 @@ let getWXConfig = async (toekn) => {
 }
 let getUrlParam = (name) => {
   var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)') //构造一个含有目标参数的正则表达式对象
-
   var r = window.location.search.substr(1).match(reg) //匹配目标参数
-
   if (r != null) return unescape(r[2])
   return null //返回参数值
 }
-let createOrder = async (openId) => {
+let createOrder = async (openId,paySuccess) => {
   let params = {}
   params.body = '江北建工'
   params.spbillCreateIp = '127.0.0.1'
   params.tradeType = 'JSAPI'
   params.openid = openId
-//   params.outTradeNo = payorder
-  params.outTradeNo = parseInt(Math.random() * 10000000000)
+  //   params.outTradeNo = payorder
+  params.outTradeNo = `${parseInt(Math.random() * 10000000000)}`
   params.notifyUrl = 'http://www.jiuhaoyong.com/jbjg/'
-  params.totalFee = parseInt(1 * 100)
+  params.totalFee = parseInt(0.1 * 100)
+  // params.subMchId = 'wecharshh'
   let data = await http.post('/jbjg/pay/createOrder', params)
-  wx.ready(() => {
-    if (typeof WeixinJSBridge == 'undefined') {
-      if (document.addEventListener) {
-        document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false)
-      } else if (document.attachEvent) {
-        document.attachEvent('WeixinJSBridgeReady', onBridgeReady)
-        document.attachEvent('onWeixinJSBridgeReady', onBridgeReady)
-      }
-    } else {
-      onBridgeReady(
-        data.appId,
-        data.timeStamp,
-        data.nonceStr,
-        data.packageValue,
-        data.paySign
-      ).then((res) => {
-        if (res != 'fail') {
-        //   paycallback(params.outTradeNo)
-        }
-      })
+  if (typeof WeixinJSBridge == 'undefined') {
+    if (document.addEventListener) {
+      document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false)
+    } else if (document.attachEvent) {
+      document.attachEvent('WeixinJSBridgeReady', onBridgeReady)
+      document.attachEvent('onWeixinJSBridgeReady', onBridgeReady)
     }
-  })
+  } else {
+    onBridgeReady(
+      data.data.appId,
+      data.data.timeStamp,
+      data.data.nonceStr,
+      data.data.packageValue,
+      data.data.paySign
+    ).then((res) => {
+      if (res != 'fail') {
+        //   paycallback(params.outTradeNo)
+        paySuccess('支付成功了')
+      }
+    })
+  }
 }
 let onBridgeReady = async (
   appId,
@@ -104,10 +102,6 @@ let getauthorize = async () => {
   let urlNow = encodeURIComponent(origin)
   let scope = 'snsapi_userinfo'
   let appid = config.appId
-  console.log(origin)
-  console.log(urlNow)
-  console.log(scope)
-  console.log(appid)
   let url =
     'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' +
     appid +

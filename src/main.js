@@ -10,6 +10,7 @@ import http from './utils/axios'
 Vue.use(Vant)
 Vue.config.productionTip = false
 Vue.prototype.$http = http
+console.log(wx)
 new Vue({
   router,
   store,
