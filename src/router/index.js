@@ -1,7 +1,9 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/home/Home.vue";
+import ReExa from "../views/signUp/ReExa.vue";
 import Entry from "../views/entry/Entry.vue"
+import NewExa from "../views/signUp/NewExa.vue"
+import ContinueExa from "../views/signUp/ContinueExa.vue"
 
 Vue.use(VueRouter);
 
@@ -12,9 +14,19 @@ const routes = [
     component: Entry
   },
   {
-    path: "/home",
-    name: "Home",
-    component: Home
+    path: "/reExa",
+    name: "ReExa",
+    component: ReExa
+  },
+  {
+    path: "/newExa",
+    name: "NewExa",
+    component: NewExa
+  },
+  {
+    path: "/continueExa",
+    name: "ContinueExa",
+    component: ContinueExa
   }
 ];
 

@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "../wx-web/precache-manifest.4c3c3ba955d6aa3a0d5d76c5c33a52c6.js"
+  "../wx-web/precache-manifest.621a2e5d4174ce795e1d33f971334a70.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "school_sign_up"});

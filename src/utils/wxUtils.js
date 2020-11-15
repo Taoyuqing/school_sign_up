@@ -32,16 +32,17 @@ let getUrlParam = (name) => {
   if (r != null) return unescape(r[2])
   return null //返回参数值
 }
-let createOrder = async (openId,paySuccess) => {
+let createOrder = async (openId,outTradeNo,totalFee,paySuccess) => {
   let params = {}
   params.body = '江北建工'
   params.spbillCreateIp = '127.0.0.1'
   params.tradeType = 'JSAPI'
   params.openid = openId
   //   params.outTradeNo = payorder
-  params.outTradeNo = `${parseInt(Math.random() * 10000000000)}`
+  // params.outTradeNo = `${parseInt(Math.random() * 10000000000)}`
+  params.outTradeNo = `${outTradeNo}`
   params.notifyUrl = 'http://www.jiuhaoyong.com/jbjg/'
-  params.totalFee = parseInt(0.1 * 100)
+  params.totalFee = totalFee*100
   // params.subMchId = 'wecharshh'
   let data = await http.post('/jbjg/pay/createOrder', params)
   if (typeof WeixinJSBridge == 'undefined') {
