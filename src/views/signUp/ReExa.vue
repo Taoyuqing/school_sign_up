@@ -171,6 +171,7 @@ export default {
         alert('请选择报科目')
         return
       }
+      this.isPay = true
       this.signUp()
     },
     async getzyList() {
@@ -250,6 +251,7 @@ export default {
       let res = await this.$http.post('/jbjg/enroll/resitSave.action', formData)
       if (!res || !res.data) {
         alert('未知错误')
+        this.isPay = false
         return
       }
 
@@ -267,7 +269,11 @@ export default {
       //   openid = data.data
       //   localStorage.setItem('openid', openid)
       // }
-      createOrder(openid, outTradeNo, this.fee, () => {
+      createOrder(openid, outTradeNo, this.fee, (r) => {
+        if (r==='支付失败了') {
+          this.isPay = false
+          return
+        }
         this.msg = '已支付'
         this.isPay = true
         this.$router.replace({
