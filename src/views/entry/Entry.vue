@@ -34,7 +34,7 @@ export default {
     
   },
   mounted(){
-    this.authorizeClick()
+    // this.authorizeClick()
   },
   methods: {
     newExa() {

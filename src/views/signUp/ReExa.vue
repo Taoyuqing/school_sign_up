@@ -76,11 +76,9 @@
           </van-field>
         </div>
         <div v-if="showTimeMsg" class="time">
-          <span
-            >该专业最新考试安排尚未公布，补考缴费以后，我校会第一时间通知你最新考试安排。</span
-          >
+          <span>该专业最新考试安排尚未公布，补考缴费以后，我校会第一时间通知你最新考试安排。</span>
         </div>
-        <div class="money">
+         <div class="money">
           <van-icon name="balance-o" size="26" />
           <span>{{ fee }}</span>
         </div>
@@ -159,7 +157,7 @@ export default {
       registrationFee: {},
       sublist: [],
       isPay: false,
-      showTimeMsg: false,
+      showTimeMsg:false
     }
   },
   mounted() {},
@@ -173,7 +171,6 @@ export default {
         alert('请选择报科目')
         return
       }
-      this.isPay = true
       this.signUp()
     },
     async getzyList() {
@@ -195,7 +192,7 @@ export default {
       const kmList = res.data.kmList
       this.kmList = kmList
       this.registrationFee = res.data.registrationFee
-      this.checkboxGroup = []
+      this.checkboxGroup=[]
       for (const item of this.kmList) {
         this.checkboxGroup.push(item.kmid)
       }
@@ -209,9 +206,9 @@ export default {
       for (const iterator of array) {
         const kmid = iterator
         for (const item of this.kmList) {
-          if (item.endtime === '' && item.starttime === '') {
+          if(item.endtime==="" && item.starttime === ""){
             this.showTimeMsg = true
-          } else {
+          }else{
             this.showTimeMsg = false
           }
           if (kmid === item.kmid) {
@@ -230,7 +227,7 @@ export default {
         this.fee = this.registrationFee.oneprice
       } else if (array.length === 2) {
         this.fee = this.registrationFee.twoprice
-      } else {
+      }else{
         this.fee = 0
       }
     },
@@ -253,7 +250,6 @@ export default {
       let res = await this.$http.post('/jbjg/enroll/resitSave.action', formData)
       if (!res || !res.data) {
         alert('未知错误')
-        this.isPay = false
         return
       }
 
@@ -271,11 +267,7 @@ export default {
       //   openid = data.data
       //   localStorage.setItem('openid', openid)
       // }
-      createOrder(openid, outTradeNo, this.fee, (r) => {
-        if (r === '支付失败了') {
-          this.isPay = false
-          return
-        }
+      createOrder(openid, outTradeNo, this.fee, () => {
         this.msg = '已支付'
         this.isPay = true
         this.$router.replace({

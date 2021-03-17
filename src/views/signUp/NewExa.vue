@@ -121,7 +121,6 @@ export default {
         alert('请选择报考专业')
         return
       }
-      this.isPay = true
       this.signUp()
     },
     async getzyList() {
@@ -165,19 +164,16 @@ export default {
       )
       if (!res || !res.data) {
         alert('未知错误')
-        this.isPay = false
         return
       }
       this.pay(outTradeNo)
+   
     },
     async pay(outTradeNo) {
-      let openid = localStorage.getItem('openid')
 
-      createOrder(openid, outTradeNo, this.registrationFee, (r) => {
-        if (r === '支付失败了') {
-          this.isPay = false
-          return
-        }
+      let openid = localStorage.getItem('openid')
+  
+      createOrder(openid, outTradeNo, this.registrationFee, () => {
         this.msg = '已支付'
         this.isPay = true
         this.$router.replace({
