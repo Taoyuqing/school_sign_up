@@ -32,39 +32,47 @@ let getUrlParam = (name) => {
   if (r != null) return unescape(r[2])
   return null //返回参数值
 }
-let createOrder = async (openId,paySuccess) => {
+let createOrder = async (openId,outTradeNo,totalFee,payRes) => {
   let params = {}
   params.body = '江北建工'
   params.spbillCreateIp = '127.0.0.1'
   params.tradeType = 'JSAPI'
   params.openid = openId
   //   params.outTradeNo = payorder
-  params.outTradeNo = `${parseInt(Math.random() * 10000000000)}`
+  // params.outTradeNo = `${parseInt(Math.random() * 10000000000)}`
+  params.outTradeNo = `${outTradeNo}`
   params.notifyUrl = 'http://www.jiuhaoyong.com/jbjg/'
-  params.totalFee = parseInt(0.1 * 100)
+  params.totalFee = totalFee*100
   // params.subMchId = 'wecharshh'
-  let data = await http.post('/jbjg/pay/createOrder', params)
-  if (typeof WeixinJSBridge == 'undefined') {
-    if (document.addEventListener) {
-      document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false)
-    } else if (document.attachEvent) {
-      document.attachEvent('WeixinJSBridgeReady', onBridgeReady)
-      document.attachEvent('onWeixinJSBridgeReady', onBridgeReady)
-    }
-  } else {
-    onBridgeReady(
-      data.data.appId,
-      data.data.timeStamp,
-      data.data.nonceStr,
-      data.data.packageValue,
-      data.data.paySign
-    ).then((res) => {
-      if (res != 'fail') {
-        //   paycallback(params.outTradeNo)
-        paySuccess('支付成功了')
+  
+  try{
+    let data = await http.post('/jbjg/pay/createOrder', params)
+    if (typeof WeixinJSBridge == 'undefined') {
+      if (document.addEventListener) {
+        document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false)
+      } else if (document.attachEvent) {
+        document.attachEvent('WeixinJSBridgeReady', onBridgeReady)
+        document.attachEvent('onWeixinJSBridgeReady', onBridgeReady)
       }
-    })
+    } else {
+      onBridgeReady(
+        data.data.appId,
+        data.data.timeStamp,
+        data.data.nonceStr,
+        data.data.packageValue,
+        data.data.paySign
+      ).then((res) => {
+        if (res != 'fail') {
+          //   paycallback(params.outTradeNo)
+          payRes('支付成功了')
+        }
+      })
+    }
+  }catch(e){
+    payRes('支付失败了')
   }
+  console.log(data)
+
 }
 let onBridgeReady = async (
   appId,
