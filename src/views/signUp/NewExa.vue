@@ -122,7 +122,7 @@ export default {
         return
       }
       this.isPay = true
-      this.signUp()
+      this.pay()
     },
     async getzyList() {
       const res = await this.$http.get('/jbjg/enroll/zyList.action')
@@ -145,8 +145,7 @@ export default {
       this.registrationFee = res.data.registrationFee
     },
     // 报名
-    async signUp() {
-      const outTradeNo = `${parseInt(Math.random() * 10000000000)}`
+    async signUp(outTradeNo, success) {
       let formData = new FormData()
       formData.append(
         'tablejson',
@@ -168,13 +167,11 @@ export default {
         this.isPay = false
         return
       }
-      this.pay(outTradeNo)
-   
+      success()
     },
-    async pay(outTradeNo) {
-
+    async pay() {
+      const outTradeNo = `${parseInt(Math.random() * 10000000000)}`
       let openid = localStorage.getItem('openid')
-  
       createOrder(openid, outTradeNo, this.registrationFee, (r) => {
         if (r === '支付失败了') {
           this.isPay = false
@@ -182,8 +179,10 @@ export default {
         }
         this.msg = '已支付'
         this.isPay = true
-        this.$router.replace({
-          path: '/paySuccess',
+        this.signUp(outTradeNo, () => {
+          this.$router.replace({
+            path: '/paySuccess',
+          })
         })
       })
     },
